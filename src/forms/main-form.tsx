@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm, useWatch } from "react-hook-form"
-//import { toast } from "sonner"
+import { useState } from "react"
 import * as z from "zod"
 import type { Dispatch, SetStateAction } from "react"
 import { Input } from "@/components/ui/input"
@@ -30,6 +30,8 @@ const formSchema = z.object({
 
 export function MainForm ({setResponse}: {setResponse: Dispatch<SetStateAction<TtablaAmortizacion>>}) {
     
+    const [isTablaStted, setIsTableSetted] = useState<boolean>(false)
+
     const mainForm = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -43,13 +45,15 @@ export function MainForm ({setResponse}: {setResponse: Dispatch<SetStateAction<T
     useWatch({
         name: 'monto',
         control: mainForm.control,
-        compute: (data: number) => {
-            console.log('MONTO VALUE CHANGED ???', data)
+        compute: () => {
+            if (isTablaStted) {
+                setIsTableSetted(false)
+                setResponse([])
+            }
         }
     })
 
     async function onSubmitForm(data: z.infer<typeof formSchema>) {
-        console.log('SUBMITED DATA', data)
         const response: Response = await fetch (
             'http://localhost:8000/simulate',
             {
@@ -74,9 +78,9 @@ export function MainForm ({setResponse}: {setResponse: Dispatch<SetStateAction<T
 
         const tablaAmortizacion = await response.json()
 
-        console.log('TABLA AMORTIZACION', tablaAmortizacion)
-
+        setIsTableSetted(true)
         setResponse(tablaAmortizacion)
+        localStorage.setItem('tablaAmortizacion', JSON.stringify(tablaAmortizacion))
     }
 
 
