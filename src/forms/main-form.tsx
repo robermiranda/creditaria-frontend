@@ -2,9 +2,9 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm, useWatch } from "react-hook-form"
 //import { toast } from "sonner"
 import * as z from "zod"
+import type { Dispatch, SetStateAction } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-
 import {
   Field,
   //FieldDescription,
@@ -12,6 +12,8 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field"
+
+import { type TtablaAmortizacion } from "@/forms/tabla_amortizacion"
 
 const formSchema = z.object({
     monto: z.coerce.number<number>()
@@ -26,7 +28,7 @@ const formSchema = z.object({
 })
 
 
-export function MainForm () {
+export function MainForm ({setResponse}: {setResponse: Dispatch<SetStateAction<TtablaAmortizacion>>}) {
     
     const mainForm = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -73,6 +75,8 @@ export function MainForm () {
         const tablaAmortizacion = await response.json()
 
         console.log('TABLA AMORTIZACION', tablaAmortizacion)
+
+        setResponse(tablaAmortizacion)
     }
 
 
