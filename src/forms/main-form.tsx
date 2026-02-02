@@ -27,9 +27,9 @@ const formSchema = z.object({
         .max(20, 'Un identificador corto, no más de 20 chars.'),
 })
 
-
 export type TmainFormParams = z.infer<typeof formSchema>
-
+export const TABLA_AMORTIZACION: string = 'tabla_amortizacion'
+export const DATA_AMORTIZACION: string = 'amortizacion_input'
 
 export function MainForm ({setResponse, valorInicial}: {
         setResponse: Dispatch<SetStateAction<TtablaAmortizacion>>
@@ -42,7 +42,6 @@ export function MainForm ({setResponse, valorInicial}: {
         resolver: zodResolver(formSchema),
         defaultValues: getDefaultValues(),
     })
-    const TABLA_AMORTIZACION: string = 'tabla_amortizacion'
     
     useEffect(() => {
         isFirstLoadRef.current = false
@@ -107,7 +106,7 @@ export function MainForm ({setResponse, valorInicial}: {
         setIsTableSetted(true)
         setResponse(tablaAmortizacion)
         localStorage.setItem(TABLA_AMORTIZACION, JSON.stringify(tablaAmortizacion))
-        localStorage.setItem('amortizacion_input', JSON.stringify({
+        localStorage.setItem(DATA_AMORTIZACION, JSON.stringify({
             monto: data.monto,
             tasa: data.tasa,
             plazo: data.plazo,
@@ -223,13 +222,19 @@ export function MainForm ({setResponse, valorInicial}: {
                     />
                 </FieldGroup>
             </form>
-            <Button
-                variant="outline"
-                type="submit"
-                form="main-form">
-                
-                Calcular
-            </Button>
+            <div className="flex justify-center">
+                <Button
+                    variant="outline"
+                    size="lg"
+                    type="submit"
+                    form="main-form"
+                    className="px-5 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition"
+                >
+                    <span className="text-lg font-semibold text-purple-800">
+                        CALCULAR
+                    </span>
+                </Button>
+            </div>
         </div>
     )
 }
