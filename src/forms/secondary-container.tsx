@@ -20,13 +20,29 @@ export function SecondaryContainer () {
             <AppNavigator/>
             <SecondaryForm setTabla={setTabla} setMonto={setMonto}/>
             <TablaAmortizacion tabla={tabla}/>
-            <div>
-                <ul>
-                    <li>Monto: {monto?.monto}</li>
-                    <li>Tasa: {monto?.tasa}</li>
-                    <li>Plazo: {monto?.plazo}</li>
-                    <li>Identificador: {monto?.identificador}</li>
-                </ul>
+            <div className="flex justify-center">
+                <div className="bg-linear-to-br from-slate-50 to-slate-100 rounded-lg border border-slate-200 shadow-md overflow-hidden w-full lg:w-1/2">
+                    <table className="w-full">
+                        <tbody>
+                            <tr className="border-b border-slate-200 hover:bg-slate-100 transition-colors">
+                                <td className="px-6 py-4 font-semibold text-slate-700 bg-slate-100/50">Monto</td>
+                                <td className="px-6 py-4 text-slate-900 font-medium">${monto?.monto.toLocaleString('es-MX', {minimumFractionDigits: 2})}</td>
+                            </tr>
+                            <tr className="border-b border-slate-200 hover:bg-slate-100 transition-colors">
+                                <td className="px-6 py-4 font-semibold text-slate-700 bg-slate-100/50">Tasa Anual</td>
+                                <td className="px-6 py-4 text-slate-900 font-medium">{((monto?.tasa || 0) * 100).toFixed(2)}%</td>
+                            </tr>
+                            <tr className="border-b border-slate-200 hover:bg-slate-100 transition-colors">
+                                <td className="px-6 py-4 font-semibold text-slate-700 bg-slate-100/50">Plazo (Meses)</td>
+                                <td className="px-6 py-4 text-slate-900 font-medium">{monto?.plazo}</td>
+                            </tr>
+                            <tr className="hover:bg-slate-100 transition-colors">
+                                <td className="px-6 py-4 font-semibold text-slate-700 bg-slate-100/50">Identificador</td>
+                                <td className="px-6 py-4 text-slate-900 font-medium">{monto?.identificador}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     )

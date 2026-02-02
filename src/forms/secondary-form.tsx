@@ -30,16 +30,31 @@ export function SecondaryForm ({setTabla, setMonto}: {
     }
 
     return (
-        <div className="flex flex-col lg:w-1/4 lg:mx-auto gap-4 ">
-            <input
-                type="text"
-                value={identificador}
-                onChange={e => setIdentificador(e.target.value)}
-                placeholder="Identificador"/>
+        <div className="flex flex-col lg:w-1/3 lg:mx-auto gap-6 bg-linear-to-br from-slate-50 to-slate-100 p-8 rounded-lg border border-slate-200 shadow-lg">
+            <div className="space-y-2">
+                <label className="block text-sm font-semibold text-slate-700">
+                    Identificador de Solicitud
+                </label>
+                <input
+                    type="text"
+                    value={identificador}
+                    onChange={e => setIdentificador(e.target.value)}
+                    placeholder="Ej: 02020939"
+                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-md focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all text-slate-900 placeholder-slate-400"
+                />
+            </div>
             
-            <button type="submit" onClick={onSubmitForm}>
-                Recuperar
+            <button 
+                type="submit" 
+                onClick={onSubmitForm}
+                className="w-full bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold py-3 px-6 rounded-md shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 active:translate-y-0 active:shadow-sm"
+            >
+                Recuperar Solicitud
             </button>
+            
+            <p className="text-xs text-slate-500 text-center mt-2">
+                Ingresa el identificador para recuperar tu simulación anterior
+            </p>
         </div>
     )
 }
