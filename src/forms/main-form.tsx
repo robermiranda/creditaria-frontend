@@ -19,8 +19,8 @@ const formSchema = z.object({
     monto: z.coerce.number<number>()
         .min(1, 'El monto debe ser mayor o igual que $1.00 MXN'),    
     tasa: z.coerce.number<number>()
-        .min(0.01, 'La tasa anual debe ser mayor al 0.01%')
-        .max(1, 'La tasa anual no debe exceder del 100%'),
+        .min(0.01, 'La tasa anual debe ser menor al 0.01%')
+        .max(100, 'La tasa anual no debe exceder del 100%'),
     plazo:z.coerce.number<number>()
         .min(1, 'El plazo a meses debe ser mayor o igual a 1 mes.'),
     identificador: z.string()
@@ -71,9 +71,9 @@ export function MainForm ({setResponse, valorInicial}: {
         }
 
         return {
-            monto: 1,
-            tasa: 0.01,
-            plazo: 1,
+            monto: 1000,
+            tasa: 3,
+            plazo: 6,
             identificador: "",
         }
     }
@@ -89,7 +89,7 @@ export function MainForm ({setResponse, valorInicial}: {
                 },
                 body: JSON.stringify({
                     monto: data.monto,
-                    tasa_anual: data.tasa,
+                    tasa_anual: (data.tasa / 100),
                     plazo_meses: data.plazo,
                     nombre_identificador: data.identificador
                 })
@@ -154,13 +154,13 @@ export function MainForm ({setResponse, valorInicial}: {
                                     ({field, fieldState}) => (
                                         <Field data-invalid={fieldState.invalid}>
                                             <FieldLabel htmlFor="main-form-tasa">
-                                                <span className="text-lg">Tasa Anual</span>
+                                                <span className="text-lg">Tasa Anual %</span>
                                             </FieldLabel>
                                             <Input
                                                 {...field}
                                                 id="main-form-tasa"
                                                 aria-invalid={fieldState.invalid}
-                                                placeholder="tasa anual"
+                                                placeholder="Ejem. 3"
                                                 autoComplete="off"
                                             />
                                             {
