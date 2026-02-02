@@ -3,6 +3,7 @@ import { type TtablaAmortizacion, TablaAmortizacion } from "@/forms/tabla_amorti
 import { useState } from "react"
 import type { TmainFormParams } from '@/forms/main-form'
 import { DATA_AMORTIZACION, TABLA_AMORTIZACION } from '@/forms/main-form'
+import { AppNavigator } from "@/forms/link-navigating"
 
 
 function getTablaAmortizacionFromStorage() {
@@ -37,7 +38,8 @@ export function MainContainer () {
     const [monto] = useState<TmainFormParams | null>(getMontoFromStorage())
 
     return(
-        <div className="flex flex-col gap-24">
+        <div className="flex flex-col gap-24 w-96 px-2 mx-auto md:w-8/12 md:px-3 pb-8 border-2 border-slate-200">
+            <AppNavigator />
             <MainForm valorInicial={tabla.length > 0 ? monto : null} setResponse={setTabla} />
             <TablaAmortizacion tabla={tabla}/>
         </div>
