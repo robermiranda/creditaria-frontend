@@ -126,7 +126,7 @@ export function MainForm ({setResponse, valorInicial}: {
                             ({field, fieldState}) => (
                                 <Field data-invalid={fieldState.invalid}>
                                     <FieldLabel htmlFor="main-form-monto">
-                                        Monto
+                                        <span className="text-lg">Monto</span>
                                     </FieldLabel>
                                     <Input
                                         {...field}
@@ -151,7 +151,7 @@ export function MainForm ({setResponse, valorInicial}: {
                             ({field, fieldState}) => (
                                 <Field data-invalid={fieldState.invalid}>
                                     <FieldLabel htmlFor="main-form-tasa">
-                                        Tasa Anual
+                                        <span className="text-lg">Tasa Anual</span>
                                     </FieldLabel>
                                     <Input
                                         {...field}
@@ -176,7 +176,7 @@ export function MainForm ({setResponse, valorInicial}: {
                             ({field, fieldState}) => (
                                 <Field data-invalid={fieldState.invalid}>
                                     <FieldLabel htmlFor="main-form-plazo">
-                                        Plazo a Meses
+                                        <span className="text-lg">Plazo a Meses</span>
                                     </FieldLabel>
                                     <Input
                                         {...field}
@@ -203,6 +203,7 @@ export function MainForm ({setResponse, valorInicial}: {
                                 <Field data-invalid={fieldState.invalid}>
                                     <FieldLabel htmlFor="main-form-identificador">
                                         Nombre o Identificador
+                                        <span className="text-xs font-light">Opcional</span>
                                     </FieldLabel>
                                     <Input
                                         {...field}
@@ -228,9 +229,9 @@ export function MainForm ({setResponse, valorInicial}: {
                     size="lg"
                     type="submit"
                     form="main-form"
-                    className="px-5 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition"
+                    className="px-5 shadow-purple-500 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition"
                 >
-                    <span className="text-lg font-semibold text-purple-800">
+                    <span className="text-xl font-semibold text-purple-700">
                         CALCULAR
                     </span>
                 </Button>
