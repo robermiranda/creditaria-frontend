@@ -7,7 +7,8 @@ export type Tmonto = {
     monto: number,
     tasa: number,
     plazo: number,
-    identificador: string
+    identificador: string,
+    aprobado: 'SI' | 'NO',
 }
 
 export function SecondaryContainer () {
@@ -39,6 +40,10 @@ export function SecondaryContainer () {
                             <tr className="hover:bg-slate-100 transition-colors">
                                 <td className="px-6 py-4 font-semibold text-slate-700 bg-slate-100/50">Identificador</td>
                                 <td className="px-6 py-4 text-slate-900 font-medium">{monto?.identificador}</td>
+                            </tr>
+                            <tr className="hover:bg-slate-100 transition-colors">
+                                <td className="px-6 py-4 font-semibold text-slate-700 bg-slate-100/50">Aprobado</td>
+                                <td className="px-6 py-4 text-slate-900 font-medium">{monto?.aprobado}</td>
                             </tr>
                         </tbody>
                     </table>

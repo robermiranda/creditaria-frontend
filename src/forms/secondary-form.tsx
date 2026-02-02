@@ -10,23 +10,72 @@ export function SecondaryForm ({setTabla, setMonto}: {
 
     const [identificador, setIdentificador] = useState<string>('')
 
-    function onSubmitForm () {
-        console.log('IDENTIFICADOR', identificador)
-        setTabla(
-            [
-                [0,0,0,0,1965],
-                [1,498.4348967742801,11.4625,486.9723967742801,1478.0276032257198],
-                [2,498.4348967742801,8.621827685483366,489.81306908879674,988.214534136923],
-                [3,498.4348967742801,5.764584782465384,492.67031199181474,495.5442221451083],
-                [4,498.4348967742801,2.8906746291797982,495.5442221451003,7.958078640513122e-12]
-            ]
+    async function onSubmitForm () {
+
+        const response: Response = await fetch (
+            `http://localhost:8000/identificador/${identificador}`,
+            {
+                method: 'GET',
+                headers: {
+                    "accept": "application/json",
+                },
+            }
         )
-        setMonto({
-            monto: 1965,
-            tasa: 0.07,
-            plazo: 4,
-            identificador: "02020939"
-        })
+
+        if ( ! response.ok) {
+            console.error('GET ERROR /identificador', response.statusText)
+            return
+        }
+
+        const datos: unknown = await response.json()
+
+        if ( ! datos || typeof datos !== 'object') {
+            return null
+        }
+        
+        if (
+            'amortizaciones' in datos &&
+            Array.isArray(datos.amortizaciones) &&
+            'anualidad' in datos &&
+            typeof datos.anualidad === 'object' &&
+            datos.anualidad !== null &&
+            'auditoria' in datos &&
+            typeof datos.auditoria === 'object' &&
+            datos.auditoria !== null) {
+
+            const datosAnualidad = (datos.anualidad as Record<string, unknown>).anualidad as number
+
+            const amortizaciones: TtablaAmortizacion = datos.amortizaciones.map(amor => {
+                return [
+                    amor.periodo,
+                    datosAnualidad,
+                    amor.interes,
+                    amor.amortizacion,
+                    amor.capital
+                ]
+            })
+
+            setTabla(amortizaciones)
+
+            const anualidad = datos.anualidad as {
+                monto: number,
+                tasa_anual: number,
+                plazo_meses: number,
+                nombre_identificador: string
+            }
+
+            const auditoria = datos.auditoria as { valida: boolean }
+
+            const datosMonto: Tmonto = {
+                monto: anualidad.monto,
+                tasa: anualidad.tasa_anual,
+                plazo: anualidad.plazo_meses,
+                identificador: anualidad.nombre_identificador,
+                aprobado: auditoria.valida ? 'SI' : 'NO'
+            }
+
+            setMonto(datosMonto)
+        }
     }
 
     return (
@@ -39,7 +88,7 @@ export function SecondaryForm ({setTabla, setMonto}: {
                     type="text"
                     value={identificador}
                     onChange={e => setIdentificador(e.target.value)}
-                    placeholder="Ej: 02020939"
+                    placeholder="Ej: 02012318"
                     className="w-full px-4 py-3 border-2 border-slate-300 rounded-md focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all text-slate-900 placeholder-slate-400"
                 />
             </div>
@@ -53,7 +102,7 @@ export function SecondaryForm ({setTabla, setMonto}: {
             </button>
             
             <p className="text-xs text-slate-500 text-center mt-2">
-                Ingresa el identificador para recuperar tu simulación anterior
+                Ingresa el identificador para recuperar tu simulación anterior. Ejemplo: 02012318
             </p>
         </div>
     )
