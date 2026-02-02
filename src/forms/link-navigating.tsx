@@ -32,7 +32,7 @@ export function AppNavigator () {
             ${isActive ? 'border-b-2 border-purple-600' : 'border-b-2 border-transparent hover:border-gray-300'}
           `}
         >
-          Seconf Form
+          Second Form
         </NavLink>
       </div>
     </nav>
