@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm, useWatch } from "react-hook-form"
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import * as z from "zod"
 import type { Dispatch, SetStateAction } from "react"
 import { Input } from "@/components/ui/input"
@@ -28,30 +28,56 @@ const formSchema = z.object({
 })
 
 
-export function MainForm ({setResponse}: {setResponse: Dispatch<SetStateAction<TtablaAmortizacion>>}) {
-    
-    const [isTablaStted, setIsTableSetted] = useState<boolean>(false)
+export type TmainFormParams = z.infer<typeof formSchema>
 
+
+export function MainForm ({setResponse, valorInicial}: {
+        setResponse: Dispatch<SetStateAction<TtablaAmortizacion>>
+        valorInicial: TmainFormParams | null
+    }) {
+
+    const [isTablaSetted, setIsTableSetted] = useState<boolean>(true)
+    const isFirstLoadRef = useRef<boolean>(true)    
     const mainForm = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        defaultValues: {
-            monto: 1,
-            tasa: 0.01,
-            plazo: 1,
-            identificador: "",
-        },
+        defaultValues: getDefaultValues(),
+    })
+    const TABLA_AMORTIZACION: string = 'tabla_amortizacion'
+    
+    useEffect(() => {
+        isFirstLoadRef.current = false
     })
 
     useWatch({
         name: 'monto',
         control: mainForm.control,
-        compute: () => {
-            if (isTablaStted) {
+        compute: (data) => {
+            console.log(data)
+            if ( ! isFirstLoadRef.current && isTablaSetted) {
                 setIsTableSetted(false)
                 setResponse([])
+                localStorage.removeItem(TABLA_AMORTIZACION)
             }
         }
     })
+
+    function getDefaultValues (): TmainFormParams {
+        if (valorInicial) {
+            return {
+                monto: valorInicial.monto,
+                tasa: valorInicial.tasa,
+                plazo: valorInicial.plazo,
+                identificador: valorInicial.identificador,
+            }
+        }
+
+        return {
+            monto: 1,
+            tasa: 0.01,
+            plazo: 1,
+            identificador: "",
+        }
+    }
 
     async function onSubmitForm(data: z.infer<typeof formSchema>) {
         const response: Response = await fetch (
@@ -80,7 +106,13 @@ export function MainForm ({setResponse}: {setResponse: Dispatch<SetStateAction<T
 
         setIsTableSetted(true)
         setResponse(tablaAmortizacion)
-        localStorage.setItem('tablaAmortizacion', JSON.stringify(tablaAmortizacion))
+        localStorage.setItem(TABLA_AMORTIZACION, JSON.stringify(tablaAmortizacion))
+        localStorage.setItem('amortizacion_input', JSON.stringify({
+            monto: data.monto,
+            tasa: data.tasa,
+            plazo: data.plazo,
+            identificador: data.identificador
+        }))
     }
 
 
